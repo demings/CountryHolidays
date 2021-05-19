@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CountryHolidays.Data;
 using CountryHolidays.Models;
+using System.Linq;
 
 namespace CountryHolidays.Controllers
 {
@@ -19,9 +20,9 @@ namespace CountryHolidays.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Country>>> GetCountries()
+        public async Task<ActionResult<IEnumerable<CountryDTO>>> GetCountries()
         {
-            return await _context.Countries.ToListAsync();
+            return await _context.Countries.Select(c => CountryToDTO(c)).ToListAsync();
         }
 
         [HttpGet("{code}/{year}")]
@@ -41,5 +42,13 @@ namespace CountryHolidays.Controllers
         {
             return await _context.Countries.ToListAsync();
         }
+
+        private static CountryDTO CountryToDTO(Country country) =>
+            new()
+            {
+                ID = country.ID,
+                Code = country.Code,
+                Name = country.Name
+            };
     }
 }
