@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using CountryHolidays.Data;
+using CountryHolidays.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using CountryHolidays.Data;
-using CountryHolidays.Models;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace CountryHolidays.Controllers
 {
@@ -26,9 +26,11 @@ namespace CountryHolidays.Controllers
         }
 
         [HttpGet("{code}/{year}")]
-        public async Task<ActionResult<IEnumerable<Country>>> GetHolidaysByYear(string code, int year)
+        public async Task<ActionResult<IEnumerable<IGrouping<int, Holiday>>>> GetHolidays(string code, int year)
         {
-            return await _context.Countries.ToListAsync();
+            var holidays = await _context.Holidays.Where(h => h.Country.Code == code && h.Date.Year == year).ToListAsync();
+
+            return holidays.GroupBy(h => h.Date.Month).ToList();
         }
 
         [HttpGet("{code}/{year}/{month}/{day}")]
@@ -46,7 +48,6 @@ namespace CountryHolidays.Controllers
         private static CountryDTO CountryToDTO(Country country) =>
             new()
             {
-                ID = country.ID,
                 Code = country.Code,
                 Name = country.Name
             };

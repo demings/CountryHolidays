@@ -29,10 +29,10 @@ namespace CountryHolidays.Data
 
             var holidays = new Holiday[]
             {
-                new Holiday { CountryID = 1, Date = DateTime.Parse("2022-01-01"), Name = "Ano Novo" },
-                new Holiday { CountryID = 1, Date = DateTime.Parse("2022-01-25"), Name = "Dia da Cidade de Luanda" },
-                new Holiday { CountryID = 1, Date = DateTime.Parse("2022-02-04"), Name = "Dia Nacional do Esforço Armado" },
-                new Holiday { CountryID = 2, Date = DateTime.Parse("2022-01-01"), Name = "New Year's Day" }
+                new Holiday { CountryCode = "ago", Date = DateTime.Parse("2022-01-01"), Name = "Ano Novo" },
+                new Holiday { CountryCode = "ago", Date = DateTime.Parse("2022-01-25"), Name = "Dia da Cidade de Luanda" },
+                new Holiday { CountryCode = "ago", Date = DateTime.Parse("2022-02-04"), Name = "Dia Nacional do Esforço Armado" },
+                new Holiday { CountryCode = "aus", Date = DateTime.Parse("2022-01-01"), Name = "New Year's Day" }
             };
             foreach (var h in holidays)
             {
