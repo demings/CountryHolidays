@@ -1,4 +1,6 @@
+using CountryHolidays.Abstractions;
 using CountryHolidays.Data;
+using CountryHolidays.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -31,6 +33,8 @@ namespace CountryHolidays
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "CountryHolidays", Version = "v1" });
             });
+
+            services.AddScoped<IDayStatusService, DayStatusService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

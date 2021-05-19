@@ -1,8 +1,8 @@
-﻿using CountryHolidays.Data;
+﻿using CountryHolidays.Abstractions;
+using CountryHolidays.Data;
 using CountryHolidays.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,10 +14,12 @@ namespace CountryHolidays.Controllers
     public class MainController : ControllerBase
     {
         private readonly HolidayContext _context;
+        private readonly IDayStatusService _statusService;
 
-        public MainController(HolidayContext context)
+        public MainController(HolidayContext context, IDayStatusService statusService)
         {
             _context = context;
+            _statusService = statusService;
         }
 
         [HttpGet]
@@ -37,19 +39,7 @@ namespace CountryHolidays.Controllers
         [HttpGet("{code}/{year}/{month}/{day}")]
         public async Task<ActionResult<string>> GetDayStatus(string code, int year, int month, int day)
         {
-            var date = new DateTime(year, month, day);
-
-            var holiday = await _context.Holidays.Where(h => h.CountryCode == code && h.Date == date).FirstOrDefaultAsync();
-
-            if (holiday is null)
-            {
-                if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday)
-                    return DayStatus.Freeday.ToString();
-
-                return DayStatus.Workday.ToString();
-            }
-
-            return DayStatus.Holiday.ToString();
+            return (await _statusService.GetStatus(code, year, month, day)).ToString();
         }
 
         [HttpGet("{code}/{year}/max")]
