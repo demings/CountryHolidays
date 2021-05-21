@@ -34,7 +34,7 @@ namespace CountryHolidays
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "CountryHolidays", Version = "v1" });
             });
 
-            services.AddScoped<IDayStatusService, DayStatusService>();
+            services.AddScoped<IDayService, DayService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
