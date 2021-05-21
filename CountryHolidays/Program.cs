@@ -1,24 +1,26 @@
+using CountryHolidays.Abstractions;
 using CountryHolidays.Data;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Threading.Tasks;
 
 namespace CountryHolidays
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var host = CreateHostBuilder(args).Build();
 
-            CreateDbIfNotExists(host);
+            await CreateDbIfNotExists(host);
 
             host.Run();
         }
 
-        private static void CreateDbIfNotExists(IHost host)
+        private static async Task CreateDbIfNotExists(IHost host)
         {
             using (var scope = host.Services.CreateScope())
             {
@@ -26,7 +28,8 @@ namespace CountryHolidays
                 try
                 {
                     var context = services.GetRequiredService<HolidayContext>();
-                    DbInitializer.Initialize(context);
+                    var enricoService = services.GetRequiredService<IEnricoService>();
+                    await DbInitializer.Initialize(context, enricoService);
                 }
                 catch (Exception ex)
                 {
