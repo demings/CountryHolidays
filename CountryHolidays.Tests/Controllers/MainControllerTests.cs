@@ -9,6 +9,8 @@ using System.Linq;
 using Xunit;
 using System;
 using CountryHolidays.Services;
+using Moq;
+using CountryHolidays.Abstractions;
 
 namespace CountryHolidays.Tests.Controllers
 {
@@ -45,8 +47,9 @@ namespace CountryHolidays.Tests.Controllers
             context.SaveChanges();
 
             var dayService = new DayService(context);
+            var enricoService = new Mock<IEnricoService>();
 
-            _controller = new MainController(context, dayService);
+            _controller = new MainController(context, dayService, enricoService.Object);
         }
 
         [Fact]
