@@ -16,14 +16,16 @@ namespace CountryHolidays.Controllers
     {
         private readonly HolidayContext _context;
         private readonly IDayService _dayService;
+        private readonly IEnricoService _enricoService;
 
-        public MainController(HolidayContext context, IDayService dayService)
+        public MainController(HolidayContext context, IDayService dayService, IEnricoService enricoService)
         {
             _context = context;
             _dayService = dayService;
+            _enricoService = enricoService;
         }
 
-        [HttpGet]
+        [HttpGet("countries")]
         public async Task<ActionResult<IEnumerable<CountryDTO>>> GetCountries()
         {
             return await _context.Countries.Select(c => CountryToDTO(c)).ToListAsync();
@@ -32,6 +34,8 @@ namespace CountryHolidays.Controllers
         [HttpGet("{code}/{year}")]
         public async Task<ActionResult<IEnumerable<IGrouping<int, Holiday>>>> GetHolidays(string code, int year)
         {
+            await _enricoService.EnsureHolidaysForYearExistInDb(code, year);
+
             var holidays = await _context.Holidays.Where(h => h.CountryCode == code && h.Date.Year == year).ToListAsync();
 
             return holidays.GroupBy(h => h.Date.Month).ToList();
@@ -40,6 +44,8 @@ namespace CountryHolidays.Controllers
         [HttpGet("{code}/{year}/{month}/{day}")]
         public async Task<ActionResult<string>> GetDayStatus(string code, int year, int month, int day)
         {
+            await _enricoService.EnsureHolidaysForYearExistInDb(code, year);
+
             var date = new DateTime(year, month, day);
 
             return (await _dayService.GetStatus(code, date)).ToString();
@@ -48,6 +54,8 @@ namespace CountryHolidays.Controllers
         [HttpGet("{code}/{year}/max")]
         public async Task<ActionResult<int>> GetMaxFreeDays(string code, int year)
         {
+            await _enricoService.EnsureHolidaysForYearExistInDb(code, year);
+
             return await _dayService.LongestFreeDaysInARow(code, year);
         }
 
