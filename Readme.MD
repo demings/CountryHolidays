@@ -6,4 +6,4 @@ Local development:
 * Set docker-compose as startup project
 * Run 
 
-API published URL: https://countryholidays20210525111327.azurewebsites.net/swagger/index.html
+Published URL: https://countryholidays20210525111327.azurewebsites.net/swagger/index.html
