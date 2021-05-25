@@ -1,0 +1,16 @@
+version: '3.4'
+
+services:
+  db:
+    image: "mcr.microsoft.com/mssql/server:2017-latest"
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=1Secure*Password1
+
+  countryholidays:
+    image: ${DOCKER_REGISTRY-}countryholidays
+    build:
+      context: .
+      dockerfile: CountryHolidays/Dockerfile
+    depends_on:
+      - db
